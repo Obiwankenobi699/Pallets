@@ -1,35 +1,27 @@
-import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev';
-
 /** @type {import('next').NextConfig} */
 
-if (process.env.NODE_ENV === 'development') {
- await setupDevPlatform();
-}
-
 const nextConfig = {
- webpack(config) {
-  const fileLoaderRule = config.module.rules.find((rule) =>
-   rule.test?.test?.('.svg')
-  );
+  webpack(config) {
+    // Remove the old file loader rule for SVGs to avoid conflicts
+    config.module.rules = config.module.rules.filter(
+      (rule) => !rule.test?.test?.('.svg')
+    );
 
-  config.module.rules.push(
-   {
-    ...fileLoaderRule,
-    test: /\.svg$/i,
-    resourceQuery: /url/, // *.svg?url
-   },
-   {
-    test: /\.svg$/i,
-    issuer: fileLoaderRule.issuer,
-    resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] },
-    use: ['@svgr/webpack'],
-   }
-  );
+    // Add new rules for SVG handling with SVGR
+    config.module.rules.push(
+      {
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        use: ['@svgr/webpack'],
+      },
+      {
+        test: /\.svg$/i,
+        type: 'asset/resource',
+      }
+    );
 
-  fileLoaderRule.exclude = /\.svg$/i;
-
-  return config;
- },
+    return config;
+  },
 };
 
 export default nextConfig;
