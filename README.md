@@ -116,6 +116,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 👤 Author
 
 - **Yuvraj Sharma** - [GitHub](https://github.com/codewyuu)
+-  **Ashish** - [GitHub](https://github.com/codewyuu)
 
 ## 🙏 Acknowledgements
 
